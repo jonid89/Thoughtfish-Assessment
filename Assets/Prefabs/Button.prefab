@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6616497717326845942}
   - component: {fileID: 3200293886199533442}
   - component: {fileID: 2951696764066920158}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 5796216511569008355}
   - component: {fileID: 7216701697878043457}
   - component: {fileID: 952886732206943781}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: ArrowImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 4256096332679878544}
   - component: {fileID: 4256096332679878558}
   - component: {fileID: 4256096332679878545}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 4256096334195610343}
   - component: {fileID: 4256096334195610340}
   - component: {fileID: 4256096334195610339}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,6 +332,7 @@ MonoBehaviour:
   button: {fileID: 4256096334195610340}
   tooltip: {fileID: 8912550524318139388}
   image: {fileID: 2951696764066920158}
+  buttonNumber: 0
 --- !u!1 &8912550524318139388
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,13 +344,13 @@ GameObject:
   - component: {fileID: 7836304864130160686}
   - component: {fileID: 5047083679053227772}
   - component: {fileID: 4322621063420524314}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Tooltip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7836304864130160686
 RectTransform:
   m_ObjectHideFlags: 0

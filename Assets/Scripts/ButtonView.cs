@@ -16,7 +16,7 @@ public class ButtonView : MonoBehaviour, IDisposable
     [SerializeField] private Image image;
 
     public Button myButton => button; 
-    private int buttonNumber;
+    public int buttonNumber;
 
     private void Start()
     {
@@ -32,7 +32,6 @@ public class ButtonView : MonoBehaviour, IDisposable
     }
 
     public void SetColor(Color color){
-        //image.color = color;
         var buttonColors = button.colors;
         buttonColors.normalColor = color;
         buttonColors.highlightedColor = color;

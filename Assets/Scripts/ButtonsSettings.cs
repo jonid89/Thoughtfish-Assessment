@@ -34,7 +34,6 @@ public class ButtonsSettings : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        Debug.Log(myButtons[1].amount);
     }
 
 #endregion

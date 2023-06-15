@@ -7,32 +7,32 @@ using UniRx;
 
 public class ObjectSpawner : IDisposable, IInitializable
 {
-    [SerializeField] public List<ButtonsSettings.MyButton> buttonsList = new List<ButtonsSettings.MyButton>();
     ButtonView.Factory _buttonViewFactory;
     ButtonController.Factory _buttonControllerFactory;
     ButtonsSettings _buttonsSettings;
+    Popup _popup;
 
-    public ObjectSpawner(ButtonView.Factory buttonViewFactory, ButtonController.Factory buttonControllerFactory, ButtonsSettings buttonsSettings){
+    public ObjectSpawner(ButtonView.Factory buttonViewFactory, ButtonController.Factory buttonControllerFactory, ButtonsSettings buttonsSettings, Popup popup){
         _buttonViewFactory = buttonViewFactory;
         _buttonControllerFactory = buttonControllerFactory;
         _buttonsSettings = buttonsSettings;
+        _popup = popup;
     }
 
     public void Initialize(){
-        //Debug.Log(buttonsList[0]);
-        //Debug.Log(_buttonsSettings.myButtons[0]);
-        buttonsList = _buttonsSettings.myButtons;
+        List<ButtonsSettings.MyButton> buttonsList = _buttonsSettings.myButtons;
         for(int i=0; i < buttonsList.Count; i++){
+            //Instantiate Button
             var buttonView = _buttonViewFactory.Create();
-            Vector2 position = new Vector2(-250+250*(i%3),-50+50*(i/3));
-            var buttonType = buttonsList[i];
-            Color buttonColor = _buttonsSettings.colorConfig[buttonType.buttonColor];
-            buttonView.SetColor(buttonColor);
-
+            _buttonControllerFactory.Create(buttonView, _popup);
+            //Set Button Config
+            Vector2 position = new Vector2(-250+250*(i%buttonsList.Count),-50+50*(i/buttonsList.Count));
             buttonView.SetPosition(position);
+            var buttonType = buttonsList[i];
+            buttonView.SetColor(_buttonsSettings.colorConfig[buttonType.buttonColor]);
+            buttonView.SetSprite(buttonType.buttonImage);
             buttonView.SetNumber(i+1);
-            _buttonControllerFactory.Create(buttonView);
-            //buttonNumberViewList.Add(buttonNumberView);
+            
         }
     }
 

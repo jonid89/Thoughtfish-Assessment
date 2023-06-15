@@ -5,7 +5,7 @@ public class ButtonInstaller : Installer<ButtonInstaller>
 {
     public override void InstallBindings()
     {
-        Container.BindFactory<ButtonNumberView, ButtonNumberController, ButtonNumberController.Factory>();
+        Container.BindFactory<ButtonView, ButtonController, ButtonController.Factory>();
         //Container.BindInterfacesTo<ButtonNumberController>().AsSingle();
     }
 }

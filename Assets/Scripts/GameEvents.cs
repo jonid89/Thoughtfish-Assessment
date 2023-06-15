@@ -12,14 +12,4 @@ public class GameEvents : MonoBehaviour
         Instance = this;
     }
 
-    /*public event Action onDoorwayTriggerEnter;
-    public void DoorwayTriggerEnter()
-    {
-        if(onDoorwayTriggerEnter!=null)
-        {
-            onDoorwayTriggerEnter();
-        }
-    }
-    */
-
 }

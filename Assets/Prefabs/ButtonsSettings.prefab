@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6850751034180355274
+--- !u!1 &3113014002361340271
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6452949288941849013}
-  - component: {fileID: 828983050549262686}
+  - component: {fileID: 3113014002361340269}
+  - component: {fileID: 3113014002361340268}
   m_Layer: 0
-  m_Name: AppInstaller
+  m_Name: ButtonsSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6452949288941849013
+--- !u!4 &3113014002361340269
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6850751034180355274}
+  m_GameObject: {fileID: 3113014002361340271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 443.7825, y: 277.32324, z: -124.70439}
+  m_LocalPosition: {x: 580.0478, y: 259.14288, z: -3.8362525}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &828983050549262686
+--- !u!114 &3113014002361340268
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6850751034180355274}
+  m_GameObject: {fileID: 3113014002361340271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0388f1a21ceb7949b8a05290f172a49, type: 3}
+  m_Script: {fileID: 11500000, guid: ff0a1fef6ad34e1418f62a57af93786b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _buttonView: {fileID: 4256096334195610342, guid: 839161f5ae1e20e4f8e44cea3849e218, type: 3}
-  buttonsSettings: {fileID: 3113014002361340268, guid: 34a9a740d37adba45851e1905f1dfc71, type: 3}
+  myButtons:
+  - buttonColor: 0
+    buttonImage: {fileID: 21300000, guid: ec020932cefcc9e4a9918c27ce8259b7, type: 3}
+    amount: 1
+  - buttonColor: 10
+    buttonImage: {fileID: 21300000, guid: b368eab92c98ede4ebc029efa17b7945, type: 3}
+    amount: 1
+  - buttonColor: 20
+    buttonImage: {fileID: 21300000, guid: 7f955b7bcb4278445b6efd658acb937b, type: 3}
+    amount: 1

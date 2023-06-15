@@ -331,6 +331,7 @@ MonoBehaviour:
   text: {fileID: 4256096332679878545}
   button: {fileID: 4256096334195610340}
   tooltip: {fileID: 8912550524318139388}
+  image: {fileID: 2951696764066920158}
 --- !u!1 &8912550524318139388
 GameObject:
   m_ObjectHideFlags: 0

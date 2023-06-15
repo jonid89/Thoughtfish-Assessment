@@ -8,11 +8,12 @@ using UniRx;
 using UniRx.Triggers;
 using Zenject;
 
-public class ButtonNumberView : MonoBehaviour, IDisposable
+public class ButtonView : MonoBehaviour, IDisposable
 {
     [SerializeField] private Text text; 
     [SerializeField] private Button button;
     [SerializeField] private GameObject tooltip;
+    [SerializeField] private Image image;
 
     public Button myButton => button; 
     private int buttonNumber;
@@ -30,11 +31,24 @@ public class ButtonNumberView : MonoBehaviour, IDisposable
         this.transform.position = positionInGrid + new Vector2 (Screen.width * 0.5f, Screen.height * 0.5f);
     }
 
+    public void SetColor(Color color){
+        //image.color = color;
+        var buttonColors = button.colors;
+        buttonColors.normalColor = color;
+        buttonColors.highlightedColor = color;
+        buttonColors.selectedColor = color;
+        button.colors = buttonColors;
+    }
+
+    public void SetSprite(Sprite sprite){
+        image.sprite = sprite;
+    }
+
     public void Dispose(){
 
     }
     
-    public class Factory : PlaceholderFactory<ButtonNumberView>
+    public class Factory : PlaceholderFactory<ButtonView>
     {
     }
     

@@ -24,7 +24,7 @@ public class ObjectSpawner : IDisposable, IInitializable
         for(int i=0; i < buttonsList.Count; i++){
             //Instantiate Button
             var buttonView = _buttonViewFactory.Create();
-            _buttonControllerFactory.Create(buttonView, _popup);
+            _buttonControllerFactory.Create(buttonView);
             //Set Button Config
             Vector2 position = new Vector2(-250+250*(i%buttonsList.Count),-50+50*(i/buttonsList.Count));
             buttonView.SetPosition(position);

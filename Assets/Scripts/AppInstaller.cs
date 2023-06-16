@@ -23,7 +23,7 @@ public class AppInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<ObjectSpawner>().AsSingle().NonLazy();
         ButtonInstaller.Install(Container);
         Container.BindFactory<ButtonView, ButtonView.Factory>().FromComponentInNewPrefab(_buttonView).UnderTransformGroup("Canvas").NonLazy();
-        Container.BindFactory<ButtonView, Popup, ButtonController, ButtonController.Factory>();
+        Container.BindFactory<ButtonView, ButtonController, ButtonController.Factory>();
         
         
     }

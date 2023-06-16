@@ -9,8 +9,9 @@ using Zenject;
 
 public class Popup : MonoBehaviour
 {
+    [SerializeField] private GameObject screenBlocker; 
+    [SerializeField] private GameObject panel; 
     [SerializeField] private Text text; 
-
 
 #region Singleton
     public static Popup Instance { get; private set; }
@@ -22,7 +23,8 @@ public class Popup : MonoBehaviour
 
     public void OpenPopup(int number){
         Debug.Log("OpenPopup() called");
-        this.gameObject.SetActive(true);
+        screenBlocker.gameObject.SetActive(true);
+        panel.gameObject.SetActive(true);
         text.text = "Popup was opened by Button " + number;
     }
     

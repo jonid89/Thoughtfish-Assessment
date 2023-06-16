@@ -8,7 +8,7 @@ using UniRx;
 using UniRx.Triggers;
 using Zenject;
 
-public class ButtonView : MonoBehaviour, IDisposable
+public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Text text; 
     [SerializeField] private Button button;
@@ -16,7 +16,9 @@ public class ButtonView : MonoBehaviour, IDisposable
     [SerializeField] private Image image;
 
     public Button myButton => button; 
+    public Color myColor;
     public int buttonNumber;
+    public bool pointerOnButton;
 
     private void Start()
     {
@@ -32,10 +34,11 @@ public class ButtonView : MonoBehaviour, IDisposable
     }
 
     public void SetColor(Color color){
+        myColor = color;
         var buttonColors = button.colors;
-        buttonColors.normalColor = color;
-        buttonColors.highlightedColor = color;
-        buttonColors.selectedColor = color;
+        buttonColors.normalColor = myColor;
+        buttonColors.highlightedColor = myColor;
+        buttonColors.selectedColor = myColor;
         button.colors = buttonColors;
     }
 
@@ -43,10 +46,21 @@ public class ButtonView : MonoBehaviour, IDisposable
         image.sprite = sprite;
     }
 
+    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        pointerOnButton = true;
+    }
+
+        public void OnPointerExit(PointerEventData eventData)
+    {
+        pointerOnButton = false;
+    }
+
     public void Dispose(){
 
     }
-    
+
     public class Factory : PlaceholderFactory<ButtonView>
     {
     }

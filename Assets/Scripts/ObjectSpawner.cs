@@ -10,13 +10,12 @@ public class ObjectSpawner : IDisposable, IInitializable
     ButtonView.Factory _buttonViewFactory;
     ButtonController.Factory _buttonControllerFactory;
     ButtonsSettings _buttonsSettings;
-    Popup _popup;
 
-    public ObjectSpawner(ButtonView.Factory buttonViewFactory, ButtonController.Factory buttonControllerFactory, ButtonsSettings buttonsSettings, Popup popup){
+    public ObjectSpawner(ButtonView.Factory buttonViewFactory, ButtonController.Factory buttonControllerFactory, ButtonsSettings buttonsSettings){
         _buttonViewFactory = buttonViewFactory;
         _buttonControllerFactory = buttonControllerFactory;
         _buttonsSettings = buttonsSettings;
-        _popup = popup;
+        
     }
 
     public void Initialize(){

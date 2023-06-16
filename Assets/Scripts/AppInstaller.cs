@@ -8,21 +8,20 @@ public class AppInstaller : MonoInstaller
 {
     [SerializeField] private GameObject _buttonView;
     [SerializeField] private ButtonsSettings buttonsSettings; 
-    [SerializeField] private Popup popup; 
-
-    void InitExecutionOrder()
-    {
-        Container.BindExecutionOrder<ButtonsSettings>(-10);
-        Container.BindExecutionOrder<ObjectSpawner>(-20);
-    }
 
     public override void InstallBindings()
     {        
         Container.Bind<ButtonsSettings>().FromInstance(buttonsSettings).AsSingle().NonLazy();
+
+        Popup popup = GameObject.FindObjectOfType<Popup>();
         Container.Bind<Popup>().FromInstance(popup).AsSingle().NonLazy();
+        
+        Recorder recorder = GameObject.FindObjectOfType<Recorder>();
+        Container.Bind<Recorder>().FromInstance(recorder).AsSingle().NonLazy();
+
         Container.BindInterfacesAndSelfTo<ObjectSpawner>().AsSingle().NonLazy();
-        ButtonInstaller.Install(Container);
-        Container.BindFactory<ButtonView, ButtonView.Factory>().FromComponentInNewPrefab(_buttonView).UnderTransformGroup("Canvas").NonLazy();
+        
+        Container.BindFactory<ButtonView, ButtonView.Factory>().FromComponentInNewPrefab(_buttonView).UnderTransformGroup("Buttons").NonLazy();
         Container.BindFactory<ButtonView, ButtonController, ButtonController.Factory>();
         
         

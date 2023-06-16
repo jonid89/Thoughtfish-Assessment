@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class ButtonsSettings : MonoBehaviour
+[CreateAssetMenu(fileName = "ButtonsSettings", menuName = "Create Buttons Settings")]
+public class ButtonsSettings : ScriptableObject
 {
     
     [System.Serializable] public class MyButton{

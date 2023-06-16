@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonView: {fileID: 4256096334195610342, guid: 839161f5ae1e20e4f8e44cea3849e218, type: 3}
-  buttonsSettings: {fileID: 1981321275394187669, guid: 34a9a740d37adba45851e1905f1dfc71, type: 3}
+  buttonsSettings: {fileID: 11400000, guid: 9195d4acf36acde45911cca0fb79367a, type: 2}
   popup: {fileID: 424525538638121681, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}

@@ -140,7 +140,14 @@ public class ButtonController : IDisposable
     private void OnDrag()
     {
             isDragging = true;
-            Vector3 currentPosition = Input.mousePosition; 
+            Vector3 currentPosition = new Vector3();
+            if(Input.GetMouseButton(0))
+            {
+                currentPosition = Input.mousePosition; 
+            }
+            else{
+                currentPosition = _buttonView.GetPlaybackCursorPosition();
+            }
             _buttonView.MyTransform.position = currentPosition;
     }
 

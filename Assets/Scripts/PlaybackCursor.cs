@@ -8,6 +8,7 @@ using UniRx;
 public class PlaybackCursor : MonoBehaviour
 {
     public LayerMask buttonLayer;
+    public LayerMask popupLayer;
     private ButtonView currentButton;
     private RectTransform rectTransform;
 
@@ -27,18 +28,35 @@ public class PlaybackCursor : MonoBehaviour
         this.transform.position = position;
     }
 
-    private void DetectButtonUnderCursor()
-    {
-        Vector2 rayOrigin = rectTransform.position;
-        Vector2 rayDirection = Vector2.up; // Example direction (adjust as needed)
-        float rayDistance = 1f; // Example distance (adjust as needed)
+private void DetectButtonUnderCursor()
+{
+    Vector2 rayOrigin = rectTransform.position;
+    Vector2 rayDirection = Vector2.up; // Example direction (adjust as needed)
+    float rayDistance = 1f; // Example distance (adjust as needed)
 
-        RaycastHit2D debugHit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, buttonLayer);
-        if (debugHit.collider != null)
+    RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance);
+
+    if (hit.collider != null)
+    {
+        Popup popup = hit.collider.GetComponent<Popup>();
+        if (popup != null)
         {
-            ButtonView buttonView = debugHit.collider.GetComponent<ButtonView>();
+            // The ray hit a Popup object
+            Button popupButton = popup.GetComponent<Button>();
+            Debug.Log("popUpButton hitted :" + popupButton.name);
+            if (popupButton != null)
+            {
+                // The Popup object has a Button component
+                popupButton.onClick.Invoke();
+            }
+        }
+        else
+        {
+            ButtonView buttonView = hit.collider.GetComponent<ButtonView>();
             if (buttonView != null)
             {
+                // The ray hit a ButtonView object
+                buttonView.PlaybackCursorPosition(this.gameObject.transform.position);
                 if (currentButton != buttonView)
                 {
                     // The cursor entered a new button
@@ -47,18 +65,19 @@ public class PlaybackCursor : MonoBehaviour
                     currentButton.PlaybackCursorEntered();
                 }
             }
-            else
-            {
-                // The ray hit a UI object on the button layer that is not a ButtonView
-                currentButton?.PlaybackCursorExited();
-                currentButton = null;
-            }
-        }
-        else
-        {
-            // The ray did not hit any UI object on the button layer
-            currentButton?.PlaybackCursorExited();
-            currentButton = null;
         }
     }
+    else
+    {
+        // The ray did not hit any UI object
+        currentButton?.PlaybackCursorExited();
+        currentButton = null;
+    }
 }
+
+
+
+
+}
+
+

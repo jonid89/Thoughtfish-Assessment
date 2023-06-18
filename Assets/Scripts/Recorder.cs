@@ -129,7 +129,6 @@ public class Recorder : MonoBehaviour
         recordedActions.Add(recordedAction);
     }
 
-
     private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
     {
         Debug.Log("Playing recording...");

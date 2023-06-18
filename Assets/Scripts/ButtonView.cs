@@ -25,6 +25,7 @@ public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPoi
     public Color myColor;
     public int buttonNumber;
     public bool pointerOnButton;
+    public Vector3 playbackCursorPosition = new Vector3();
 
     private void Start()
     {
@@ -66,7 +67,6 @@ public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPoi
         pointerOnButton = false;
     }
 
-
     public void PlaybackCursorEntered()
     {
         Debug.Log("Playback cursor entered Button " + buttonNumber);
@@ -79,16 +79,15 @@ public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPoi
         pointerOnButton = false;
     }
 
-    /*private void OnTriggerEnter(Collider other)
+    public void PlaybackCursorPosition(Vector3 position)
     {
-        Debug.Log("Trigger entered. Button " + buttonNumber);
-        Debug.Log("Collider object name" + other.name );
-        if(other.name == "PlaybackCursor")
-        {
-            
-            pointerOnButton = true;
-        }
-    }*/
+        playbackCursorPosition = position;
+    }
+
+    public Vector3 GetPlaybackCursorPosition()
+    {
+        return playbackCursorPosition;
+    }
 
     public void Dispose()
     {

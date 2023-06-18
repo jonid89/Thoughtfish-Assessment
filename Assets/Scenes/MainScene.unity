@@ -220,6 +220,9 @@ MonoBehaviour:
   buttonLayer:
     serializedVersion: 2
     m_Bits: 256
+  popupLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &154190741
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,9 +1302,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1173632696}
     m_Modifications:
+    - target: {fileID: 424525537501800882, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 424525537694066745, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 424525537969807985, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 424525537969807985, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 424525538163333810, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 424525538163333810, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
       propertyPath: m_IsActive
@@ -1394,6 +1413,10 @@ PrefabInstance:
     - target: {fileID: 424525538638121711, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
       propertyPath: m_Name
       value: PopUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 424525538638121711, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 424525538638121711, guid: b5c6ef4a25c81f24991a1b56bdd7ce4f, type: 3}
       propertyPath: m_IsActive

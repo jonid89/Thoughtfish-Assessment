@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityCursorControl;
 using UnityEngine.InputSystem;
 
 public class Recorder : MonoBehaviour
@@ -17,6 +16,8 @@ public class Recorder : MonoBehaviour
 
     public RectTransform cursorRectTransform;
     private Vector2 originalCursorPosition;
+    private float pointerDownTime;
+    private float clickThreshold = 0.1f;
 
     [System.Serializable]
     public struct RecordedAction
@@ -109,9 +110,19 @@ public class Recorder : MonoBehaviour
     {
         float time = Time.time;
         Vector2 position = Input.mousePosition;
-        bool isLeftClick = Input.GetMouseButtonDown(0);
-        bool isRightClick = Input.GetMouseButtonDown(1);
-        bool isDrag = Input.GetMouseButton(0);
+        bool isLeftClick = Input.GetMouseButtonUp(0);
+        bool isRightClick = Input.GetMouseButtonUp(1);
+
+        bool isDrag = false;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            pointerDownTime = Time.time;
+        }
+        else if (Input.GetMouseButton(0) && (Time.time - pointerDownTime) >= clickThreshold)
+        {
+            isDrag = true;
+        }
 
         RecordedAction recordedAction = new RecordedAction(time, position, isLeftClick, isRightClick, isDrag);
         recordedActions.Add(recordedAction);
@@ -142,6 +153,61 @@ public class Recorder : MonoBehaviour
         }
     }
 
+
+
+    private void MoveCursor(Vector2 position)
+    {
+        //cursorRectTransform.position = position;
+        CursorControl.SetLocalCursorPos(position);
+    }
+
+#region old Click Action Methods
+
+    private void ClickAction(Vector2 position)
+    {
+        MoveCursor(position);
+        CursorControl.SimulateLeftClick();
+    }
+
+    private void RightClickAction(Vector2 position)
+    {
+        MoveCursor(position);
+        CursorControl.SimulateRightClick();
+    }
+
+    private void DragAction(Vector2 position)
+    {
+        MoveCursor(position);
+        //CursorControl.SimulateLeftClick();
+    }
+
+#endregion
+
+    private void SaveRecording()
+    {
+        if (isRecording)
+        {
+            string filePath = Application.persistentDataPath + "/" + recordingName + ".txt";
+            List<string> lines = new List<string>();
+
+            foreach (RecordedAction recordedAction in recordedActions)
+            {
+                string line = string.Format("{0},{1},{2},{3},{4},{5}",
+                    recordedAction.time, recordedAction.position.x, recordedAction.position.y,
+                    recordedAction.isLeftClick, recordedAction.isRightClick, recordedAction.isDrag);
+                lines.Add(line);
+            }
+
+            System.IO.File.WriteAllLines(filePath, lines.ToArray());
+            Debug.Log("Recording saved to file: " + filePath);
+        }
+    }
+
+}
+
+
+#region raycast option
+/*
 private void ClickAction(Vector2 position)
 {
     GameObject targetObject = GetGameObjectUnderCursor(position);
@@ -194,58 +260,6 @@ private GameObject GetGameObjectUnderCursor(Vector2 position)
     }
 
     return null;
-}
-
-
-
-
-    private void MoveCursor(Vector2 position)
-    {
-        cursorRectTransform.position = position;
-        //CursorControl.SetLocalCursorPos(position);
-    }
-
-#region old Click Action Methods
-/*
-    private void ClickAction(Vector2 position)
-    {
-        MoveCursor(position);
-        ExecuteEvents.Execute<IPointerClickHandler>(gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
-        //CursorControl.SimulateLeftClick();
-    }
-
-    private void RightClickAction(Vector2 position)
-    {
-        MoveCursor(position);
-        //CursorControl.SimulateRightClick();
-    }
-
-    private void DragAction(Vector2 position)
-    {
-        MoveCursor(position);
-        //CursorControl.SimulateLeftClick();
-    }
-*/
+}*/
 #endregion
 
-    private void SaveRecording()
-    {
-        if (isRecording)
-        {
-            string filePath = Application.persistentDataPath + "/" + recordingName + ".txt";
-            List<string> lines = new List<string>();
-
-            foreach (RecordedAction recordedAction in recordedActions)
-            {
-                string line = string.Format("{0},{1},{2},{3},{4},{5}",
-                    recordedAction.time, recordedAction.position.x, recordedAction.position.y,
-                    recordedAction.isLeftClick, recordedAction.isRightClick, recordedAction.isDrag);
-                lines.Add(line);
-            }
-
-            System.IO.File.WriteAllLines(filePath, lines.ToArray());
-            Debug.Log("Recording saved to file: " + filePath);
-        }
-    }
-
-}

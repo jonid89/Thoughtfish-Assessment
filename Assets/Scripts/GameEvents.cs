@@ -3,21 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameEvents : MonoBehaviour
-{
-    public static GameEvents Instance;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-}
-
-
-/*
-using System;
-
 public class GameEvents
 {
     public static GameEvents Instance;
@@ -53,4 +38,20 @@ public class GameEvents
     }
 }
 
+
+
+/*
+public class GameEvents : MonoBehaviour
+{
+    public static GameEvents Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+}
 */
+
+
+

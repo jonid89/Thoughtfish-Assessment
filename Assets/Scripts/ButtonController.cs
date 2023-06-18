@@ -16,34 +16,27 @@ public class ButtonController : IDisposable
     Coroutine tooltipCoroutine;
     private Recorder _recorder;
     private bool isDragging = false;
-    private Vector2 dragOffset;
-    private float clickThreshold = 0.1f;
-    private float pointerDownTime;
+    private float clickThreshold = 0.2f;
     private EventTrigger trigger;
+    private float pointerDownTime;
 
     public ButtonController(ButtonView buttonView, Popup popup, Recorder recorder)
     {
         _popup = popup;
         _buttonView = buttonView;
         _recorder = recorder;
+
+        GameEvents.OnLeftClickDown += OnLeftClickDown;
+        GameEvents.OnLeftClickHold += OnLeftClickHold;
+        GameEvents.OnLeftClickUp += OnLeftClickUp;
+        GameEvents.OnRightClickDown += OnRightClickDown;
+        GameEvents.OnRightClickUp += OnRightClickUp;
+
         SetButtonBehaviors();
     }
 
     private void SetButtonBehaviors()
     {
-        // Left-Click
-        _buttonView.myButton.OnPointerUpAsObservable()
-            .Where(_ => Input.GetMouseButtonUp(0))
-            .Where(_ => !isDragging)
-            .Where(_ => (Time.time - pointerDownTime) < clickThreshold)
-            .Subscribe(_ => ButtonClick());
-
-        // Right-Click
-        Observable.EveryUpdate()
-            .Where(_ => Input.GetMouseButtonDown(1))
-            .Where(_ => _buttonView.pointerOnButton)
-            .Subscribe(_ => RightClickAction());
-
         // Hovering
         _buttonView.myButton.OnPointerEnterAsObservable()
             .Subscribe(_ => OnPointerEnter());
@@ -51,43 +44,52 @@ public class ButtonController : IDisposable
         _buttonView.myButton.OnPointerExitAsObservable()
             .Subscribe(_ => OnPointerExit());
 
-        // Dragging
-        var trigger = _buttonView.myButton.gameObject.GetComponent<EventTrigger>();
-
-        // Add PointerDown event
-        var pointerDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        pointerDownEntry.callback.AddListener((data) => OnPointerDown((PointerEventData)data));
-        trigger.triggers.Add(pointerDownEntry);
-
-        // Add Drag event
-        var dragEntry = new EventTrigger.Entry { eventID = EventTriggerType.Drag };
-        dragEntry.callback.AddListener((data) => OnDrag((PointerEventData)data));
-        trigger.triggers.Add(dragEntry);
-
-        // Add EndDrag event
-        var endDragEntry = new EventTrigger.Entry { eventID = EventTriggerType.EndDrag };
-        endDragEntry.callback.AddListener((data) => OnEndDrag((PointerEventData)data));
-        trigger.triggers.Add(endDragEntry);
-
-        // Add PointerUp event
-        var pointerUpEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        pointerUpEntry.callback.AddListener((data) => OnPointerUp((PointerEventData)data));
-        trigger.triggers.Add(pointerUpEntry);
     }
 
-    public void ButtonClick()
-    {
-        _popup.OpenPopup(_buttonView.buttonNumber);
 
-        if (_recorder != null && _recorder.IsRecording)
+    private void OnLeftClickDown()
+    {
+        if (_buttonView.pointerOnButton)
         {
-            _recorder.RecordAction(); // Record the button click action
+            isDragging = true;
+            pointerDownTime = Time.time;  
         }
     }
 
-    public void RightClickAction()
+    private void OnLeftClickHold()
     {
-        ChangeColor();
+        if (_buttonView.pointerOnButton)
+        {
+            _buttonView.StartCoroutine(LeftClickDownCoroutine());        
+        }
+    }
+
+
+    private void OnLeftClickUp()
+    {
+        isDragging = false;
+        if (_buttonView.pointerOnButton)
+        {
+
+            if(Time.time - pointerDownTime <= clickThreshold)
+                {
+                    OpenPupup();
+                }
+        }  
+    }
+
+    
+    public void OnRightClickDown()
+    {
+        //ChangeColor();
+    }
+
+    public void OnRightClickUp()
+    {
+        if (_buttonView.pointerOnButton)
+        {
+            ChangeColor();
+        }
     }
 
     private void OnPointerEnter()
@@ -115,6 +117,15 @@ public class ButtonController : IDisposable
         }
     }
 
+    private IEnumerator LeftClickDownCoroutine()
+    {
+        yield return new WaitForSeconds(clickThreshold);
+        if(isDragging)
+        {   
+            OnDrag();
+        }  
+    }
+
     private IEnumerator ActivateTooltipCoroutine()
     {
         yield return new WaitForSeconds(_buttonView.tooltipDelay);
@@ -125,34 +136,20 @@ public class ButtonController : IDisposable
         }
     }
 
-    private void OnPointerDown(PointerEventData eventData)
-    {
-        if (_buttonView.pointerOnButton)
-        {
-            pointerDownTime = Time.time;
-            isDragging = false;
-            dragOffset = _buttonView.MyTransform.position - (Vector3)eventData.position;
-        }
-    }
 
-    private void OnDrag(PointerEventData eventData)
+    private void OnDrag()
     {
-        if (_buttonView.pointerOnButton)
-        {
             isDragging = true;
-            Vector3 currentPosition = eventData.position + (Vector2)dragOffset;
+            Vector3 currentPosition = Input.mousePosition; 
             _buttonView.MyTransform.position = currentPosition;
+    }
+
+    public void OpenPupup()
+    {
+        if (_buttonView.pointerOnButton)
+        {
+            _popup.OpenPopup(_buttonView.buttonNumber);
         }
-    }
-
-    private void OnEndDrag(PointerEventData eventData)
-    {
-        isDragging = false;
-    }
-
-    private void OnPointerUp(PointerEventData eventData)
-    {
-        isDragging = false;
     }
 
     private void ChangeColor()
@@ -184,7 +181,16 @@ public class ButtonController : IDisposable
             _buttonView.StopCoroutine(tooltipCoroutine);
             tooltipCoroutine = null;
         }
+
+        GameEvents.OnLeftClickDown -= OnLeftClickDown;
+        GameEvents.OnLeftClickDown -= OnLeftClickHold;
+        GameEvents.OnLeftClickUp -= OnLeftClickUp;
+        GameEvents.OnRightClickDown -= OnRightClickDown;
+        GameEvents.OnRightClickUp -= OnRightClickUp;
+
+        
     }
+    
 
     public class Factory : PlaceholderFactory<ButtonView, ButtonController>
     {

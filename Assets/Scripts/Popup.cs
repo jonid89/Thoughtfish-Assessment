@@ -22,7 +22,6 @@ public class Popup : MonoBehaviour
 #endregion
 
     public void OpenPopup(int number){
-        Debug.Log("OpenPopup() called");
         screenBlocker.gameObject.SetActive(true);
         panel.gameObject.SetActive(true);
         text.text = "Popup was opened by Button " + number;

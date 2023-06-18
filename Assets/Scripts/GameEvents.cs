@@ -3,55 +3,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameEvents
+public class GameEvents : MonoBehaviour
 {
-    public static GameEvents Instance;
 
-    public event Action OnPointerDown;
-    public event Action OnPointerUp;
-    public event Action OnPointerEnter;
-    public event Action OnPointerExit;
+#region Singleton
+    public static GameEvents Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+#endregion
+
+    public delegate void LeftClickDown();
+    public static LeftClickDown OnLeftClickDown;
+    public delegate void LeftClickHold();   
+    public static LeftClickHold OnLeftClickHold;
+    public delegate void LeftClickUp();
+    public static LeftClickUp OnLeftClickUp;
+    public delegate void RightClickDown();
+    public static RightClickDown OnRightClickDown;
+    public delegate void RightClickUp();
+    public static RightClickUp OnRightClickUp;
 
     public static void Initialize()
     {
         Instance = new GameEvents();
     }
 
-    public void TriggerPointerDown()
+    public void TriggerLeftClickDown()
     {
-        OnPointerDown?.Invoke();
+        if(OnLeftClickDown != null)
+            OnLeftClickDown();
     }
 
-    public void TriggerPointerUp()
+    public void TriggerLeftClickHold()
     {
-        OnPointerUp?.Invoke();
+        if(OnLeftClickHold != null)
+            OnLeftClickHold();
     }
 
-    public void TriggerPointerEnter()
+    public void TriggerLeftClickUp()
     {
-        OnPointerEnter?.Invoke();
+        if(OnLeftClickUp != null)
+            OnLeftClickUp();
     }
 
-    public void TriggerPointerExit()
+    public void TriggerRightClickDown()
     {
-        OnPointerExit?.Invoke();
+        if(OnRightClickDown != null)
+            OnRightClickDown();
+    }
+
+    public void TriggerRightClickUp()
+    {
+        if(OnRightClickUp != null)
+            OnRightClickUp();
     }
 }
 
 
-
-/*
-public class GameEvents : MonoBehaviour
-{
-    public static GameEvents Instance;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-}
-*/
 
 
 

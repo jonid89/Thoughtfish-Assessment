@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
-using UniRx;
 using UnityEngine.EventSystems;
-using UnityEngine.Events;
+using UniRx;
 using UniRx.Triggers;
+using Zenject;
 
 public class ButtonController : IDisposable
 {
@@ -20,6 +19,7 @@ public class ButtonController : IDisposable
     private Vector2 dragOffset;
     private float clickThreshold = 0.1f;
     private float pointerDownTime;
+    private EventTrigger trigger;
 
     public ButtonController(ButtonView buttonView, Popup popup, Recorder recorder)
     {
@@ -42,7 +42,7 @@ public class ButtonController : IDisposable
         Observable.EveryUpdate()
             .Where(_ => Input.GetMouseButtonDown(1))
             .Where(_ => _buttonView.pointerOnButton)
-            .Subscribe(_ => ChangeColor());
+            .Subscribe(_ => RightClickAction());
 
         // Hovering
         _buttonView.myButton.OnPointerEnterAsObservable()
@@ -52,7 +52,7 @@ public class ButtonController : IDisposable
             .Subscribe(_ => OnPointerExit());
 
         // Dragging
-        var trigger = _buttonView.myButton.gameObject.AddComponent<EventTrigger>();
+        var trigger = _buttonView.myButton.gameObject.GetComponent<EventTrigger>();
 
         // Add PointerDown event
         var pointerDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
@@ -85,23 +85,9 @@ public class ButtonController : IDisposable
         }
     }
 
-    public void ChangeColor()
+    public void RightClickAction()
     {
-        if (_buttonView.myColor == Color.red)
-        {
-            _buttonView.SetColor(Color.green);
-            return;
-        }
-        if (_buttonView.myColor == Color.green)
-        {
-            _buttonView.SetColor(Color.blue);
-            return;
-        }
-        if (_buttonView.myColor == Color.blue)
-        {
-            _buttonView.SetColor(Color.red);
-            return;
-        }
+        ChangeColor();
     }
 
     private void OnPointerEnter()
@@ -167,6 +153,25 @@ public class ButtonController : IDisposable
     private void OnPointerUp(PointerEventData eventData)
     {
         isDragging = false;
+    }
+
+    private void ChangeColor()
+    {
+        if (_buttonView.myColor == Color.red)
+        {
+            _buttonView.SetColor(Color.green);
+            return;
+        }
+        if (_buttonView.myColor == Color.green)
+        {
+            _buttonView.SetColor(Color.blue);
+            return;
+        }
+        if (_buttonView.myColor == Color.blue)
+        {
+            _buttonView.SetColor(Color.red);
+            return;
+        }
     }
 
     public void Dispose()

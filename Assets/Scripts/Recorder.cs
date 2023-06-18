@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityCursorControl;
+using UnityEngine.InputSystem;
 
 public class Recorder : MonoBehaviour
 {
@@ -71,12 +74,13 @@ public class Recorder : MonoBehaviour
         foreach (string line in lines)
         {
             string[] data = line.Split(',');
-            if (data.Length == 5 && float.TryParse(data[0], out float time) &&
+            if (data.Length == 6 && float.TryParse(data[0], out float time) &&
                 float.TryParse(data[1], out float x) && float.TryParse(data[2], out float y) &&
-                bool.TryParse(data[3], out bool isLeftClick) && bool.TryParse(data[4], out bool isRightClick))
+                bool.TryParse(data[3], out bool isLeftClick) && bool.TryParse(data[4], out bool isRightClick) &&
+                bool.TryParse(data[5], out bool isDrag))
             {
                 Vector2 position = new Vector2(x, y);
-                RecordedAction recordedAction = new RecordedAction(time, position, isLeftClick, isRightClick, false);
+                RecordedAction recordedAction = new RecordedAction(time, position, isLeftClick, isRightClick, isDrag);
                 loadedRecording.Add(recordedAction);
             }
         }
@@ -92,8 +96,9 @@ public class Recorder : MonoBehaviour
         }
     }
 
+
     private void Update()
-    {
+    {   
         if (isRecording)
         {
             RecordAction();
@@ -137,43 +142,110 @@ public class Recorder : MonoBehaviour
         }
     }
 
+private void ClickAction(Vector2 position)
+{
+    GameObject targetObject = GetGameObjectUnderCursor(position);
+    if (targetObject != null)
+    {
+        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
+    }
+}
+
+
+private void RightClickAction(Vector2 position)
+{
+    GameObject targetObject = GetGameObjectUnderCursor(position);
+    Debug.Log("RC object: " + targetObject.name);
+    if (targetObject != null)
+    {
+        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Right }, ExecuteEvents.pointerClickHandler);
+    }
+}
+
+private void DragAction(Vector2 position)
+{
+    GameObject targetObject = GetGameObjectUnderCursor(position);
+    if (targetObject != null)
+    {
+        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.beginDragHandler);
+        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.dragHandler);
+        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.endDragHandler);
+    }
+}
+
+
+   
+private GameObject GetGameObjectUnderCursor(Vector2 position)
+{
+    PointerEventData eventData = new PointerEventData(EventSystem.current);
+    eventData.position = position;
+
+    List<RaycastResult> results = new List<RaycastResult>();
+    EventSystem.current.RaycastAll(eventData, results);
+
+    foreach (RaycastResult result in results)
+    {
+        GameObject targetObject = result.gameObject;
+        Button button = targetObject.GetComponentInParent<Button>();
+        if (button != null)
+        {
+            return targetObject;
+        }
+    }
+
+    return null;
+}
+
+
+
+
+    private void MoveCursor(Vector2 position)
+    {
+        cursorRectTransform.position = position;
+        //CursorControl.SetLocalCursorPos(position);
+    }
+
+#region old Click Action Methods
+/*
     private void ClickAction(Vector2 position)
     {
         MoveCursor(position);
-        
+        ExecuteEvents.Execute<IPointerClickHandler>(gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
+        //CursorControl.SimulateLeftClick();
     }
 
     private void RightClickAction(Vector2 position)
     {
         MoveCursor(position);
-        
+        //CursorControl.SimulateRightClick();
     }
 
     private void DragAction(Vector2 position)
     {
         MoveCursor(position);
-        
+        //CursorControl.SimulateLeftClick();
     }
-
-    private void MoveCursor(Vector2 position)
-    {
-        cursorRectTransform.position = position;
-    }
+*/
+#endregion
 
     private void SaveRecording()
     {
-        string filePath = Application.persistentDataPath + "/" + recordingName + ".txt";
-        List<string> lines = new List<string>();
-
-        foreach (RecordedAction recordedAction in recordedActions)
+        if (isRecording)
         {
-            string line = string.Format("{0},{1},{2},{3},{4}",
-                recordedAction.time, recordedAction.position.x, recordedAction.position.y,
-                recordedAction.isLeftClick, recordedAction.isRightClick);
-            lines.Add(line);
-        }
+            string filePath = Application.persistentDataPath + "/" + recordingName + ".txt";
+            List<string> lines = new List<string>();
 
-        System.IO.File.WriteAllLines(filePath, lines.ToArray());
-        Debug.Log("Recording saved to file: " + filePath);
+            foreach (RecordedAction recordedAction in recordedActions)
+            {
+                string line = string.Format("{0},{1},{2},{3},{4},{5}",
+                    recordedAction.time, recordedAction.position.x, recordedAction.position.y,
+                    recordedAction.isLeftClick, recordedAction.isRightClick, recordedAction.isDrag);
+                lines.Add(line);
+            }
+
+            System.IO.File.WriteAllLines(filePath, lines.ToArray());
+            Debug.Log("Recording saved to file: " + filePath);
+        }
     }
+
 }

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myButtons:
   - buttonColor: 0
-    buttonImage: {fileID: 21300000, guid: ec020932cefcc9e4a9918c27ce8259b7, type: 3}
+    buttonImage: {fileID: 21300000, guid: b368eab92c98ede4ebc029efa17b7945, type: 3}
     amount: 1
   - buttonColor: 10
-    buttonImage: {fileID: 21300000, guid: b368eab92c98ede4ebc029efa17b7945, type: 3}
+    buttonImage: {fileID: 21300000, guid: ec020932cefcc9e4a9918c27ce8259b7, type: 3}
     amount: 1
   - buttonColor: 20
     buttonImage: {fileID: 21300000, guid: 7f955b7bcb4278445b6efd658acb937b, type: 3}

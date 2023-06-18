@@ -14,8 +14,7 @@ public class Recorder : MonoBehaviour
     public Text nameText;
     private string recordingName;
 
-    public RectTransform cursorRectTransform;
-    private Vector2 originalCursorPosition;
+    public PlaybackCursor playbackCursor;
     private float pointerDownTime;
     private GameEvents gameEvents;
 
@@ -46,7 +45,6 @@ public class Recorder : MonoBehaviour
     {
         gameEvents = GameEvents.Instance;
         recordedActions = new List<RecordedAction>();
-        originalCursorPosition = cursorRectTransform.anchoredPosition;
     }
 
     public void StartRecording()
@@ -66,7 +64,7 @@ public class Recorder : MonoBehaviour
     public void PlayRecording(List<RecordedAction> recording)
     {
         recordingName = nameText.text.ToString();
-        cursorRectTransform.gameObject.SetActive(true);
+        playbackCursor.gameObject.SetActive(true);
         StartCoroutine(PlayRecordingCoroutine(recording));
     }
 
@@ -85,11 +83,10 @@ public class Recorder : MonoBehaviour
                 float.TryParse(data[1], out float x) && 
                 float.TryParse(data[2], out float y) &&
                 bool.TryParse(data[3], out bool isLeftClickDown) && 
-                bool.TryParse(data[3], out bool isLeftClickHold) && 
-                bool.TryParse(data[3], out bool isLeftClickUp) && 
-                bool.TryParse(data[4], out bool isRightClickDown) &&
-                bool.TryParse(data[4], out bool isRightClickUp) &&
-                bool.TryParse(data[5], out bool isDrag)
+                bool.TryParse(data[4], out bool isLeftClickHold) && 
+                bool.TryParse(data[5], out bool isLeftClickUp) && 
+                bool.TryParse(data[6], out bool isRightClickDown) &&
+                bool.TryParse(data[7], out bool isRightClickUp) 
                 )
             {
                 Vector2 position = new Vector2(x, y);
@@ -132,17 +129,16 @@ public class Recorder : MonoBehaviour
         recordedActions.Add(recordedAction);
     }
 
-#region old PlayRecordingCoroutine
-/*
+
     private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
     {
         Debug.Log("Playing recording...");
-
         foreach (RecordedAction recordedAction in recording)
         {
+                        
             yield return new WaitForSeconds(recordedAction.time - Time.time);
             
-            MoveCursor(recordedAction.position);
+            playbackCursor.MoveCursor(recordedAction.position);
 
             if (recordedAction.isLeftClickDown)
             {
@@ -166,57 +162,12 @@ public class Recorder : MonoBehaviour
             }
         }
     }
-    */
-#endregion
 
-
-private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
-{
-    Debug.Log("Playing recording...");
-
-    foreach (RecordedAction recordedAction in recording)
-    {
-        
-
-        yield return new WaitForSeconds(recordedAction.time - Time.time);
-
-        if (recordedAction.isLeftClickDown)
-        {
-            gameEvents.TriggerLeftClickDown();
-            MoveCursor(recordedAction.position);
-        }
-        if (recordedAction.isLeftClickHold)
-        {
-            gameEvents.TriggerLeftClickHold();
-            MoveCursor(recordedAction.position);
-        }
-        if (recordedAction.isLeftClickUp)
-        {
-            gameEvents.TriggerLeftClickUp();
-            MoveCursor(recordedAction.position);
-        }
-        if (recordedAction.isRightClickDown)
-        {
-            gameEvents.TriggerRightClickDown();
-            MoveCursor(recordedAction.position);
-        }
-        if (recordedAction.isRightClickUp)
-        {
-            gameEvents.TriggerRightClickUp();
-            MoveCursor(recordedAction.position);
-        }
-    }
-}
-
-
-
-
-
-
-    private void MoveCursor(Vector2 position)
+    /*private void MoveCursor(Vector2 position)
     {
         cursorRectTransform.position = position;
-    }
+    }*/
+
 
     private void SaveRecording()
     {

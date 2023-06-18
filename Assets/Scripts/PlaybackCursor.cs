@@ -1,12 +1,12 @@
-using UnityEngine;   
-using UnityEngine.UI;     
-using UnityEngine.EventSystems;  
-using System.Collections;       
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 
 public class PlaybackCursor : MonoBehaviour
 {
-    //public GameObject movableObject;
     public LayerMask buttonLayer;
     private ButtonView currentButton;
     private RectTransform rectTransform;
@@ -16,7 +16,18 @@ public class PlaybackCursor : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
     }
 
-    private void Update()
+    private void Start()
+    {
+        Observable.EveryUpdate()
+            .Subscribe(_ => DetectButtonUnderCursor())
+            .AddTo(this);
+    }
+
+    public void MoveCursor(Vector2 position){
+        this.transform.position = position;
+    }
+
+    private void DetectButtonUnderCursor()
     {
         Vector2 rayOrigin = rectTransform.position;
         Vector2 rayDirection = Vector2.up; // Example direction (adjust as needed)
@@ -25,13 +36,12 @@ public class PlaybackCursor : MonoBehaviour
         RaycastHit2D debugHit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, buttonLayer);
         if (debugHit.collider != null)
         {
-            //Debug.Log("Raycast hit: " + debugHit.collider.gameObject.name);
             ButtonView buttonView = debugHit.collider.GetComponent<ButtonView>();
             if (buttonView != null)
             {
                 if (currentButton != buttonView)
                 {
-                    // The movableObject entered a new button
+                    // The cursor entered a new button
                     currentButton?.PlaybackCursorExited();
                     currentButton = buttonView;
                     currentButton.PlaybackCursorEntered();

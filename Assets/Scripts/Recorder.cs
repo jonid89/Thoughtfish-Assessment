@@ -17,29 +17,34 @@ public class Recorder : MonoBehaviour
     public RectTransform cursorRectTransform;
     private Vector2 originalCursorPosition;
     private float pointerDownTime;
-    private float clickThreshold = 0.1f;
+    private GameEvents gameEvents;
 
     [System.Serializable]
     public struct RecordedAction
     {
         public float time;
         public Vector2 position;
-        public bool isLeftClick;
-        public bool isRightClick;
-        public bool isDrag;
+        public bool isLeftClickDown;
+        public bool isLeftClickHold;
+        public bool isLeftClickUp;
+        public bool isRightClickDown;
+        public bool isRightClickUp;
 
-        public RecordedAction(float time, Vector2 position, bool isLeftClick, bool isRightClick, bool isDrag)
+        public RecordedAction(float time, Vector2 position, bool isLeftClickDown, bool isLeftClickHold, bool isLeftClickUp, bool isRightClickDown, bool isRightClickUp)
         {
             this.time = time;
             this.position = position;
-            this.isLeftClick = isLeftClick;
-            this.isRightClick = isRightClick;
-            this.isDrag = isDrag;
+            this.isLeftClickDown = isLeftClickDown;
+            this.isLeftClickHold =isLeftClickHold;
+            this.isLeftClickUp =isLeftClickUp;
+            this.isRightClickDown = isRightClickDown;
+            this.isRightClickUp = isRightClickUp;
         }
     }
 
     private void Start()
     {
+        gameEvents = GameEvents.Instance;
         recordedActions = new List<RecordedAction>();
         originalCursorPosition = cursorRectTransform.anchoredPosition;
     }
@@ -75,13 +80,20 @@ public class Recorder : MonoBehaviour
         foreach (string line in lines)
         {
             string[] data = line.Split(',');
-            if (data.Length == 6 && float.TryParse(data[0], out float time) &&
-                float.TryParse(data[1], out float x) && float.TryParse(data[2], out float y) &&
-                bool.TryParse(data[3], out bool isLeftClick) && bool.TryParse(data[4], out bool isRightClick) &&
-                bool.TryParse(data[5], out bool isDrag))
+            if (data.Length == 8 && 
+                float.TryParse(data[0], out float time) &&
+                float.TryParse(data[1], out float x) && 
+                float.TryParse(data[2], out float y) &&
+                bool.TryParse(data[3], out bool isLeftClickDown) && 
+                bool.TryParse(data[3], out bool isLeftClickHold) && 
+                bool.TryParse(data[3], out bool isLeftClickUp) && 
+                bool.TryParse(data[4], out bool isRightClickDown) &&
+                bool.TryParse(data[4], out bool isRightClickUp) &&
+                bool.TryParse(data[5], out bool isDrag)
+                )
             {
                 Vector2 position = new Vector2(x, y);
-                RecordedAction recordedAction = new RecordedAction(time, position, isLeftClick, isRightClick, isDrag);
+                RecordedAction recordedAction = new RecordedAction(time, position, isLeftClickDown, isLeftClickHold, isLeftClickUp, isRightClickDown, isRightClickUp);
                 loadedRecording.Add(recordedAction);
             }
         }
@@ -110,24 +122,18 @@ public class Recorder : MonoBehaviour
     {
         float time = Time.time;
         Vector2 position = Input.mousePosition;
-        bool isLeftClick = Input.GetMouseButtonUp(0);
-        bool isRightClick = Input.GetMouseButtonUp(1);
+        bool isLeftClickDown = Input.GetMouseButtonDown(0);
+        bool isLeftClickHold = Input.GetMouseButton(0);
+        bool isLeftClickUp = Input.GetMouseButtonUp(0);
+        bool isRightClickDown = Input.GetMouseButtonDown(1);
+        bool isRightClickUp = Input.GetMouseButtonUp(1);
 
-        bool isDrag = false;
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            pointerDownTime = Time.time;
-        }
-        else if (Input.GetMouseButton(0) && (Time.time - pointerDownTime) >= clickThreshold)
-        {
-            isDrag = true;
-        }
-
-        RecordedAction recordedAction = new RecordedAction(time, position, isLeftClick, isRightClick, isDrag);
+        RecordedAction recordedAction = new RecordedAction(time, position, isLeftClickDown, isLeftClickHold, isLeftClickUp, isRightClickDown, isRightClickUp);
         recordedActions.Add(recordedAction);
     }
 
+#region old PlayRecordingCoroutine
+/*
     private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
     {
         Debug.Log("Playing recording...");
@@ -138,50 +144,79 @@ public class Recorder : MonoBehaviour
             
             MoveCursor(recordedAction.position);
 
-            if (recordedAction.isLeftClick)
+            if (recordedAction.isLeftClickDown)
             {
-                ClickAction(recordedAction.position);
+                gameEvents.TriggerLeftClickDown();
             }
-            else if (recordedAction.isRightClick)
+            if (recordedAction.isLeftClickHold)
             {
-                RightClickAction(recordedAction.position);
+                gameEvents.TriggerLeftClickHold();
             }
-            else if (recordedAction.isDrag)
+            if (recordedAction.isLeftClickUp)
             {
-                DragAction(recordedAction.position);
+                gameEvents.TriggerLeftClickUp();
+            }
+            if (recordedAction.isRightClickDown)
+            {
+                gameEvents.TriggerRightClickDown();
+            }
+            if (recordedAction.isRightClickUp)
+            {
+                gameEvents.TriggerRightClickUp();
             }
         }
     }
+    */
+#endregion
+
+
+private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
+{
+    Debug.Log("Playing recording...");
+
+    foreach (RecordedAction recordedAction in recording)
+    {
+        
+
+        yield return new WaitForSeconds(recordedAction.time - Time.time);
+
+        if (recordedAction.isLeftClickDown)
+        {
+            gameEvents.TriggerLeftClickDown();
+            MoveCursor(recordedAction.position);
+        }
+        if (recordedAction.isLeftClickHold)
+        {
+            gameEvents.TriggerLeftClickHold();
+            MoveCursor(recordedAction.position);
+        }
+        if (recordedAction.isLeftClickUp)
+        {
+            gameEvents.TriggerLeftClickUp();
+            MoveCursor(recordedAction.position);
+        }
+        if (recordedAction.isRightClickDown)
+        {
+            gameEvents.TriggerRightClickDown();
+            MoveCursor(recordedAction.position);
+        }
+        if (recordedAction.isRightClickUp)
+        {
+            gameEvents.TriggerRightClickUp();
+            MoveCursor(recordedAction.position);
+        }
+    }
+}
+
+
+
 
 
 
     private void MoveCursor(Vector2 position)
     {
-        //cursorRectTransform.position = position;
-        CursorControl.SetLocalCursorPos(position);
+        cursorRectTransform.position = position;
     }
-
-#region old Click Action Methods
-
-    private void ClickAction(Vector2 position)
-    {
-        MoveCursor(position);
-        CursorControl.SimulateLeftClick();
-    }
-
-    private void RightClickAction(Vector2 position)
-    {
-        MoveCursor(position);
-        CursorControl.SimulateRightClick();
-    }
-
-    private void DragAction(Vector2 position)
-    {
-        MoveCursor(position);
-        //CursorControl.SimulateLeftClick();
-    }
-
-#endregion
 
     private void SaveRecording()
     {
@@ -192,9 +227,15 @@ public class Recorder : MonoBehaviour
 
             foreach (RecordedAction recordedAction in recordedActions)
             {
-                string line = string.Format("{0},{1},{2},{3},{4},{5}",
-                    recordedAction.time, recordedAction.position.x, recordedAction.position.y,
-                    recordedAction.isLeftClick, recordedAction.isRightClick, recordedAction.isDrag);
+                string line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
+                    recordedAction.time, 
+                    recordedAction.position.x, 
+                    recordedAction.position.y,
+                    recordedAction.isLeftClickDown, 
+                    recordedAction.isLeftClickHold,
+                    recordedAction.isLeftClickUp,  
+                    recordedAction.isRightClickDown,
+                    recordedAction.isRightClickUp);
                 lines.Add(line);
             }
 
@@ -205,61 +246,4 @@ public class Recorder : MonoBehaviour
 
 }
 
-
-#region raycast option
-/*
-private void ClickAction(Vector2 position)
-{
-    GameObject targetObject = GetGameObjectUnderCursor(position);
-    if (targetObject != null)
-    {
-        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
-    }
-}
-
-
-private void RightClickAction(Vector2 position)
-{
-    GameObject targetObject = GetGameObjectUnderCursor(position);
-    Debug.Log("RC object: " + targetObject.name);
-    if (targetObject != null)
-    {
-        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Right }, ExecuteEvents.pointerClickHandler);
-    }
-}
-
-private void DragAction(Vector2 position)
-{
-    GameObject targetObject = GetGameObjectUnderCursor(position);
-    if (targetObject != null)
-    {
-        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.beginDragHandler);
-        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.dragHandler);
-        ExecuteEvents.Execute(targetObject, new PointerEventData(EventSystem.current), ExecuteEvents.endDragHandler);
-    }
-}
-
-
-   
-private GameObject GetGameObjectUnderCursor(Vector2 position)
-{
-    PointerEventData eventData = new PointerEventData(EventSystem.current);
-    eventData.position = position;
-
-    List<RaycastResult> results = new List<RaycastResult>();
-    EventSystem.current.RaycastAll(eventData, results);
-
-    foreach (RaycastResult result in results)
-    {
-        GameObject targetObject = result.gameObject;
-        Button button = targetObject.GetComponentInParent<Button>();
-        if (button != null)
-        {
-            return targetObject;
-        }
-    }
-
-    return null;
-}*/
-#endregion
 

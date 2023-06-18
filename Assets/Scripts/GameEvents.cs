@@ -51,6 +51,7 @@ public class GameEvents : MonoBehaviour
 
     public void TriggerRightClickDown()
     {
+        Debug.Log("RightClick triggered");
         if(OnRightClickDown != null)
             OnRightClickDown();
     }

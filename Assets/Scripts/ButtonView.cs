@@ -29,6 +29,7 @@ public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPoi
     private void Start()
     {
         text.text = "Button " + buttonNumber;
+        pointerOnButton = false;
     }
 
     public void SetNumber(int number)
@@ -64,6 +65,30 @@ public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPoi
     {
         pointerOnButton = false;
     }
+
+
+    public void PlaybackCursorEntered()
+    {
+        Debug.Log("Playback cursor entered Button " + buttonNumber);
+        pointerOnButton = true;
+    }
+
+    public void PlaybackCursorExited()
+    {
+        Debug.Log("Playback cursor exited Button " + buttonNumber);
+        pointerOnButton = false;
+    }
+
+    /*private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Trigger entered. Button " + buttonNumber);
+        Debug.Log("Collider object name" + other.name );
+        if(other.name == "PlaybackCursor")
+        {
+            
+            pointerOnButton = true;
+        }
+    }*/
 
     public void Dispose()
     {

@@ -40,22 +40,19 @@ public class PlaybackCursor : MonoBehaviour
     private void DetectButtonUnderCursor()
     {
         Vector2 rayOrigin = rectTransform.position;
-        Vector2 rayDirection = Vector2.up; // Example direction (adjust as needed)
-        float rayDistance = 5f; // Example distance (adjust as needed)
+        Vector2 rayDirection = Vector2.up;
+        float rayDistance = 1f; 
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDirection, rayDistance);
 
         // Check for Popup buttons first
         bool popupButtonHit = false;
-        Debug.Log("hits.Length: " + hits.Length);
         for (int i = 0; i < hits.Length; i++)
         {
             RaycastHit2D hit = hits[i];
-            Debug.Log("Current hit: " + hits[i].collider.tag);
-            if (popupLayer == hit.collider.gameObject.layer)
+            if (IsLayerInMask(hit.collider.gameObject.layer, popupLayer))
             {
                 Button popupButton = hit.collider.gameObject.GetComponent<Button>();
-                Debug.Log("The ray hit a Popup object with a Button component");
                 if (popupButton != null)
                 {
                     popupButton.onClick.Invoke();
@@ -67,20 +64,17 @@ public class PlaybackCursor : MonoBehaviour
 
         if (!popupButtonHit)
         {
-            // If no Popup button was hit, check for ButtonView objects
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit2D hit = hits[i];
-                if (buttonLayer == (buttonLayer | (1 << hit.collider.gameObject.layer)))
+                if (IsLayerInMask(hit.collider.gameObject.layer, buttonLayer))
                 {
                     ButtonView buttonView = hit.collider.GetComponent<ButtonView>();
                     buttonView.PlaybackCursorPosition(this.gameObject.transform.position);
                     if (buttonView != null)
                     {
-                        // The ray hit a ButtonView object
                         if (currentButton != buttonView)
                         {
-                            // The cursor entered a new button
                             currentButton?.PlaybackCursorExited();
                             currentButton = buttonView;
                             currentButton.PlaybackCursorEntered();
@@ -91,8 +85,12 @@ public class PlaybackCursor : MonoBehaviour
             }
         }
 
-        // If no valid buttons were hit, exit the current button state
         currentButton?.PlaybackCursorExited();
         currentButton = null;
+    }
+
+    private bool IsLayerInMask(int layer, LayerMask layerMask)
+    {
+        return layerMask == (layerMask | (1 << layer));
     }
 }

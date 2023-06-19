@@ -214,10 +214,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   popupLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 128
 --- !u!1 &154190741
 GameObject:
   m_ObjectHideFlags: 0

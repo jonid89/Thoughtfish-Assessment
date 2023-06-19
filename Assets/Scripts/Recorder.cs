@@ -63,13 +63,14 @@ public class Recorder : MonoBehaviour
 
     public void PlayRecording(List<RecordedAction> recording)
     {
-        recordingName = nameText.text.ToString();
+        //recordingName = nameText.text.ToString();
         playbackCursor.gameObject.SetActive(true);
         StartCoroutine(PlayRecordingCoroutine(recording));
     }
 
     public void LoadRecordingFromFile()
     {
+        recordingName = nameText.text.ToString();
         string filePath = Application.persistentDataPath + "/" + recordingName + ".txt";
         Debug.Log("File Path: " + filePath);
         string[] lines = System.IO.File.ReadAllLines(filePath);

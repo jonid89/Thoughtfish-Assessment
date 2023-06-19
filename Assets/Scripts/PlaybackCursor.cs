@@ -58,13 +58,16 @@ public class PlaybackCursor : MonoBehaviour
         RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDirection, rayDistance);
 
         bool popupButtonHit = false;
+
         for (int i = 0; i < hits.Length; i++)
         {
             RaycastHit2D hit = hits[i];
+
             if (IsLayerInMask(hit.collider.gameObject.layer, popupLayer))
             {
                 isPopupLayer = true;
                 popupButton = hit.collider.gameObject.GetComponent<Button>();
+
                 if (popupButton != null)
                 {
                     popupButtonHit = true;
@@ -84,10 +87,12 @@ public class PlaybackCursor : MonoBehaviour
                 for (int i = 0; i < hits.Length; i++)
                 {
                     RaycastHit2D hit = hits[i];
+
                     if (IsLayerInMask(hit.collider.gameObject.layer, buttonLayer))
                     {
                         ButtonView buttonView = hit.collider.GetComponent<ButtonView>();
                         buttonView.PlaybackCursorPosition(this.gameObject.transform.position);
+
                         if (buttonView != null)
                         {
                             if (currentButton != buttonView)
@@ -101,6 +106,7 @@ public class PlaybackCursor : MonoBehaviour
                     }
                 }
             }
+
             currentButton?.PlaybackCursorExited();
             currentButton = null;
         }
@@ -114,6 +120,3 @@ public class PlaybackCursor : MonoBehaviour
         return layerMask == (layerMask | (1 << layer));
     }
 }
-
-
-

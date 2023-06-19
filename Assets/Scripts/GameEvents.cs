@@ -39,7 +39,6 @@ public class GameEvents : MonoBehaviour
 
     public void TriggerLeftClickHold()
     {
-        Debug.Log("LeftClick hold triggered");
         if(OnLeftClickHold != null)
             OnLeftClickHold();
     }

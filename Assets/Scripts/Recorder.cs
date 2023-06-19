@@ -160,6 +160,7 @@ public class Recorder : MonoBehaviour
                 gameEvents.TriggerRightClickUp();
             }
         }
+        playbackCursor.gameObject.SetActive(false);
     }
 
     /*private void MoveCursor(Vector2 position)

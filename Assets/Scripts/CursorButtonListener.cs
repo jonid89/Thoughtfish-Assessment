@@ -27,6 +27,8 @@ public class CursorButtonListener : MonoBehaviour
 
         // Get the reference to the GameEvents instance
         gameEvents = GameEvents.Instance;
+        
+        Debug.Log("CursorButtonListener gameEvents: " + gameEvents);
     }
 
     private void Update()

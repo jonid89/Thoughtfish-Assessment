@@ -19,13 +19,24 @@ public class PlaybackCursor : MonoBehaviour
     private bool leftClickDownTriggered = false;
     private bool isPopupLayer = false;
 
+
+#region Singleton
+    public static PlaybackCursor Instance { get; private set; }
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        Instance = this;
+        
+    }
+#endregion
+
+    public void SetActiveMethod()
+    {
+        this.gameObject.SetActive(true);
     }
 
     private void OnEnable()
     {
+        rectTransform = GetComponent<RectTransform>();
         updateDisposable = this.UpdateAsObservable()
             .Subscribe(_ => DetectButtonUnderCursor());
 

@@ -13,8 +13,11 @@ public class PlaybackCursor : MonoBehaviour
     public LayerMask buttonLayer;
     public LayerMask popupLayer;
     private ButtonView currentButton;
+    private Button popupButton;
     private RectTransform rectTransform;
     private IDisposable updateDisposable;
+    private bool leftClickDownTriggered = false;
+    private bool isPopupLayer = false;
 
     private void Awake()
     {
@@ -25,68 +28,85 @@ public class PlaybackCursor : MonoBehaviour
     {
         updateDisposable = this.UpdateAsObservable()
             .Subscribe(_ => DetectButtonUnderCursor());
+
+        GameEvents.OnLeftClickDown += HandleLeftClickDown;
     }
 
     private void OnDisable()
     {
         updateDisposable?.Dispose();
+
+        GameEvents.OnLeftClickDown -= HandleLeftClickDown;
     }
 
     public void MoveCursor(Vector2 position)
     {
-        transform.position = position;
+        rectTransform.position = position;
+    }
+
+    private void HandleLeftClickDown()
+    {
+        leftClickDownTriggered = true;
     }
 
     private void DetectButtonUnderCursor()
     {
         Vector2 rayOrigin = rectTransform.position;
-        Vector2 rayDirection = Vector2.up;
+        Vector2 rayDirection = Vector2.up; 
         float rayDistance = 1f; 
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(rayOrigin, rayDirection, rayDistance);
 
-        // Check for Popup buttons first
         bool popupButtonHit = false;
         for (int i = 0; i < hits.Length; i++)
         {
             RaycastHit2D hit = hits[i];
             if (IsLayerInMask(hit.collider.gameObject.layer, popupLayer))
             {
-                Button popupButton = hit.collider.gameObject.GetComponent<Button>();
+                isPopupLayer = true;
+                popupButton = hit.collider.gameObject.GetComponent<Button>();
                 if (popupButton != null)
                 {
-                    popupButton.onClick.Invoke();
                     popupButtonHit = true;
                     break;
                 }
             }
         }
 
-        if (!popupButtonHit)
+        if (popupButtonHit && leftClickDownTriggered)
         {
-            for (int i = 0; i < hits.Length; i++)
+            popupButton.onClick.Invoke();
+        }
+        else
+        {
+            if (!popupButtonHit && !isPopupLayer)
             {
-                RaycastHit2D hit = hits[i];
-                if (IsLayerInMask(hit.collider.gameObject.layer, buttonLayer))
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    ButtonView buttonView = hit.collider.GetComponent<ButtonView>();
-                    buttonView.PlaybackCursorPosition(this.gameObject.transform.position);
-                    if (buttonView != null)
+                    RaycastHit2D hit = hits[i];
+                    if (IsLayerInMask(hit.collider.gameObject.layer, buttonLayer))
                     {
-                        if (currentButton != buttonView)
+                        ButtonView buttonView = hit.collider.GetComponent<ButtonView>();
+                        buttonView.PlaybackCursorPosition(this.gameObject.transform.position);
+                        if (buttonView != null)
                         {
-                            currentButton?.PlaybackCursorExited();
-                            currentButton = buttonView;
-                            currentButton.PlaybackCursorEntered();
+                            if (currentButton != buttonView)
+                            {
+                                currentButton?.PlaybackCursorExited();
+                                currentButton = buttonView;
+                                currentButton.PlaybackCursorEntered();
+                            }
+                            return;
                         }
-                        return;
                     }
                 }
             }
+            currentButton?.PlaybackCursorExited();
+            currentButton = null;
         }
 
-        currentButton?.PlaybackCursorExited();
-        currentButton = null;
+        leftClickDownTriggered = false;
+        isPopupLayer = false;
     }
 
     private bool IsLayerInMask(int layer, LayerMask layerMask)
@@ -94,3 +114,6 @@ public class PlaybackCursor : MonoBehaviour
         return layerMask == (layerMask | (1 << layer));
     }
 }
+
+
+

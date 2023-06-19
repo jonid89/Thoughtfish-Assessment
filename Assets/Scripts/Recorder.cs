@@ -133,9 +133,9 @@ public class Recorder : MonoBehaviour
     private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
     {
         Debug.Log("Playing recording...");
+        
         foreach (RecordedAction recordedAction in recording)
         {
-                        
             yield return new WaitForSeconds(recordedAction.time - Time.time);
             
             playbackCursor.MoveCursor(recordedAction.position);

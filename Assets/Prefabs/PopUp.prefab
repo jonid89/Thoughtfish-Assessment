@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 424525537501800883}
   - component: {fileID: 424525537501800885}
   - component: {fileID: 424525537501800884}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 424525537694066746}
   - component: {fileID: 424525537694066748}
   - component: {fileID: 424525537694066747}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +171,7 @@ GameObject:
   - component: {fileID: 424525537969807986}
   - component: {fileID: 424525537969807988}
   - component: {fileID: 424525537969807987}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,8 @@ GameObject:
   - component: {fileID: 424525538163333811}
   - component: {fileID: 424525538163333813}
   - component: {fileID: 424525538163333812}
-  m_Layer: 5
+  - component: {fileID: 3278218590550041015}
+  m_Layer: 7
   m_Name: ScreenBlocker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -314,6 +315,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!61 &3278218590550041015
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424525538163333810}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2000, y: 1000}
+  m_EdgeRadius: 0
 --- !u!1 &424525538638121711
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,7 +351,7 @@ GameObject:
   m_Component:
   - component: {fileID: 424525538638121680}
   - component: {fileID: 424525538638121681}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: PopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}

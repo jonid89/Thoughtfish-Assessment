@@ -29,11 +29,6 @@ public class PlaybackCursor : MonoBehaviour
     }
 #endregion
 
-    public void SetActiveMethod()
-    {
-        this.gameObject.SetActive(true);
-    }
-
     private void OnEnable()
     {
         rectTransform = GetComponent<RectTransform>();

@@ -10,10 +10,8 @@ using Zenject;
 
 public class StartRecording
 {
-    Recorder recorder;
     SaveRecording saveRecording;
     private string _recordingName;
-
     private List<RecordedAction> recordedActions = new List<RecordedAction>();
 
     public StartRecording(SaveRecording saveRecording)

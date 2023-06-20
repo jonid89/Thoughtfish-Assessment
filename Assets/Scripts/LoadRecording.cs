@@ -14,6 +14,7 @@ public class LoadRecording: IInitializable
     private List<RecordedAction> recordedActions = new List<RecordedAction>();
     private GameEvents gameEvents;
     PlaybackCursor _playbackCursor;
+
     public LoadRecording(Recorder recorder, PlaybackCursor playbackCursor)
     {
         _playbackCursor = playbackCursor;
@@ -67,11 +68,9 @@ public class LoadRecording: IInitializable
 
     public void PlayRecording(List<RecordedAction> recording)
     {
-        _playbackCursor.SetActiveMethod();
         _recorder.StartCoroutine(PlayRecordingCoroutine(recording));
     }
 
-    
     private System.Collections.IEnumerator PlayRecordingCoroutine(List<RecordedAction> recording)
     {
         Debug.Log("Playing recording...");
@@ -105,6 +104,5 @@ public class LoadRecording: IInitializable
         }
         _playbackCursor.gameObject.SetActive(false);
     }
-
 
 }

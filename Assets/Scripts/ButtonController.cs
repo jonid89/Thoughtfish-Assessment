@@ -32,20 +32,25 @@ public class ButtonController : IDisposable
         GameEvents.OnRightClickDown += OnRightClickDown;
         GameEvents.OnRightClickUp += OnRightClickUp;
 
-        SetButtonBehaviors();
+        SetHoveringBehavior();
     }
 
-    private void SetButtonBehaviors()
+    private void SetHoveringBehavior()
     {
-        // Hovering
-        _buttonView.myButton.OnPointerEnterAsObservable()
-            .Subscribe(_ => OnPointerEnter());
-
-        _buttonView.myButton.OnPointerExitAsObservable()
-            .Subscribe(_ => OnPointerExit());
-
+        _buttonView
+        .ObserveEveryValueChanged(view => view.pointerOnButton)
+        .Subscribe(pointerOnButton =>
+        {
+            if (pointerOnButton)
+            {
+                OnPointerEnter();
+            }
+            else
+            {
+                OnPointerExit();
+            }
+        });
     }
-
 
     private void OnLeftClickDown()
     {
@@ -64,7 +69,6 @@ public class ButtonController : IDisposable
         }
     }
 
-
     private void OnLeftClickUp()
     {
         isDragging = false;
@@ -78,10 +82,8 @@ public class ButtonController : IDisposable
         }  
     }
 
-    
     public void OnRightClickDown()
     {
-        //ChangeColor();
     }
 
     public void OnRightClickUp()
@@ -135,7 +137,6 @@ public class ButtonController : IDisposable
             _buttonView.tooltip.SetActive(true);
         }
     }
-
 
     private void OnDrag()
     {
@@ -193,12 +194,9 @@ public class ButtonController : IDisposable
         GameEvents.OnLeftClickDown -= OnLeftClickHold;
         GameEvents.OnLeftClickUp -= OnLeftClickUp;
         GameEvents.OnRightClickDown -= OnRightClickDown;
-        GameEvents.OnRightClickUp -= OnRightClickUp;
-
-        
+        GameEvents.OnRightClickUp -= OnRightClickUp;    
     }
     
-
     public class Factory : PlaceholderFactory<ButtonView, ButtonController>
     {
     }

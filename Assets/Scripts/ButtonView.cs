@@ -69,13 +69,11 @@ public class ButtonView : MonoBehaviour, IDisposable, IPointerEnterHandler, IPoi
 
     public void PlaybackCursorEntered()
     {
-        Debug.Log("Playback cursor entered Button " + buttonNumber);
         pointerOnButton = true;
     }
 
     public void PlaybackCursorExited()
     {
-        Debug.Log("Playback cursor exited Button " + buttonNumber);
         pointerOnButton = false;
     }
 

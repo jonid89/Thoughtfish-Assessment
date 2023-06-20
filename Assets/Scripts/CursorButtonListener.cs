@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class CursorButtonListener : MonoBehaviour
 {
+    private GameEvents gameEvents;
 
 #region Singleton
     public static CursorButtonListener Instance { get; private set; }
@@ -14,21 +15,12 @@ public class CursorButtonListener : MonoBehaviour
     {
         Instance = this;
     }
-
 #endregion
 
 
-    private GameEvents gameEvents;
-
     private void Start()
     {
-        // Initialize the GameEvents instance
-        //GameEvents.Initialize();
-
-        // Get the reference to the GameEvents instance
         gameEvents = GameEvents.Instance;
-        
-        Debug.Log("CursorButtonListener gameEvents: " + gameEvents);
     }
 
     private void Update()
@@ -61,3 +53,4 @@ public class CursorButtonListener : MonoBehaviour
         }
     }
 }
+

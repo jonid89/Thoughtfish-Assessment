@@ -9,22 +9,17 @@ using Zenject;
 public class Recorder : MonoBehaviour
 {
     private bool isRecording = false;
-
     public Text nameText;
     private string recordingName;
     private GameEvents gameEvents;
 
-
     [Inject]
     StartRecording _startRecording;
-
     [Inject]
     SaveRecording _saveRecording;
-        
     [Inject]
     LoadRecording _loadRecording;
 
-    
 #region Singleton
     public static Recorder Instance { get; private set; }
     private void Awake()
@@ -45,6 +40,14 @@ public class Recorder : MonoBehaviour
         gameEvents = GameEvents.Instance;
     }
 
+    private void Update()
+    {   
+        if (isRecording)
+        {
+            _startRecording.RecordAction();
+        }
+    }
+
     public void StartRecording()
     {
         isRecording = true;
@@ -58,23 +61,11 @@ public class Recorder : MonoBehaviour
         isRecording = false;
     }
 
-
-
     public void LoadRecordingFromFile()
     {
         recordingName = nameText.text.ToString();
         _loadRecording.LoadRecordingFromFile(recordingName);
     }
-
-
-    private void Update()
-    {   
-        if (isRecording)
-        {
-            _startRecording.RecordAction();
-        }
-    }
-
 }
 
 

@@ -11,10 +11,6 @@ using Zenject;
 public class SaveRecording
 {
     private List<RecordedAction> recordedActions = new List<RecordedAction>();
-    public SaveRecording()
-    {
-        
-    }
 
     public void SaveRecordingToFile(string recordingName, List<RecordedAction> recordedActionsToSave)
     {
@@ -40,8 +36,5 @@ public class SaveRecording
         Debug.Log("Recording saved to file: " + filePath);
 
     }
-
-    
-
 
 }

@@ -15,6 +15,7 @@ public class PlaybackCursor : MonoBehaviour
     private ButtonView currentButton;
     private Button popupButton;
     private RectTransform rectTransform;
+    private Vector2 originalPosition;
     private IDisposable updateDisposable;
     private bool leftClickDownTriggered = false;
     private bool isPopupLayer = false;
@@ -25,7 +26,6 @@ public class PlaybackCursor : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
     }
 #endregion
 
@@ -34,7 +34,7 @@ public class PlaybackCursor : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         updateDisposable = this.UpdateAsObservable()
             .Subscribe(_ => DetectButtonUnderCursor());
-
+        originalPosition = rectTransform.position;
         GameEvents.OnLeftClickDown += HandleLeftClickDown;
     }
 
@@ -43,6 +43,11 @@ public class PlaybackCursor : MonoBehaviour
         updateDisposable?.Dispose();
 
         GameEvents.OnLeftClickDown -= HandleLeftClickDown;
+    }
+
+    public void BackToOriginalPosition()
+    {
+        rectTransform.position = originalPosition;
     }
 
     public void MoveCursor(Vector2 position)

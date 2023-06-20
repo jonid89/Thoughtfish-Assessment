@@ -102,7 +102,7 @@ public class LoadRecording: IInitializable
                 gameEvents.TriggerRightClickUp();
             }
         }
-        _playbackCursor.gameObject.SetActive(false);
+        _playbackCursor.BackToOriginalPosition();
     }
 
 }

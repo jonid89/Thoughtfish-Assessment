@@ -10,6 +10,8 @@ public class Recorder : MonoBehaviour
 {
     private bool isRecording = false;
     public Text nameText;
+    public Button startRecordingButton;
+    public Button stopRecordingButton;
     private string recordingName;
     private GameEvents gameEvents;
 
@@ -50,6 +52,8 @@ public class Recorder : MonoBehaviour
 
     public void StartRecording()
     {
+        startRecordingButton.gameObject.SetActive(false);
+        stopRecordingButton.gameObject.SetActive(true);
         isRecording = true;
         recordingName = nameText.text.ToString();
         _startRecording.StartRecordingMethod(recordingName);
@@ -57,6 +61,8 @@ public class Recorder : MonoBehaviour
 
     public void StopRecording()
     {
+        stopRecordingButton.gameObject.SetActive(false);
+        startRecordingButton.gameObject.SetActive(true);
         _startRecording.StopRecording();
         isRecording = false;
     }
